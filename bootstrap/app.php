@@ -41,6 +41,19 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+array_map(function($provider) use ($app) {
+    $app->register($provider);
+}, [
+    /**
+     * @see https://lumen.laravel.com/docs/master/providers
+     *
+     * Array of fully qualified class name resolutions
+     * of every service provider that needs to be
+     * registered.
+     */
+    App\Providers\MatchServiceProvider::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

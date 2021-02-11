@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+$router->group([
+    'prefix' => 'match',
+], function () use ($router) {
+    $router->get('/test', [
+        'as' => 'match.index',
+        'uses' => 'App\Http\Controllers\MatchController@index',
+    ]);
+});
