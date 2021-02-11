@@ -9,6 +9,6 @@ class MatchController extends Controller
 {
     public function index(Request $request,MatchServiceInterface $matchService)
     {
-        $result = $matchService->matchTheTeamsByWeek(1);
+        $result = $matchService->matchTheTeamsByWeek(2);
     }
 }
