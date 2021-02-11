@@ -15,6 +15,14 @@ class CreateLeaguesTable extends Migration
     {
         Schema::create('leagues', function (Blueprint $table) {
             $table->id();
+            $table->integer('team_id');
+            $table->integer('week');
+            $table->integer('points')->default(0);
+            $table->integer('played')->default(0);
+            $table->integer('win')->default(0);
+            $table->integer('draw')->default(0);
+            $table->integer('lose')->default(0);
+            $table->integer('goal_difference')->default(0);
             $table->timestamps();
         });
     }
