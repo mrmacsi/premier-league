@@ -183,7 +183,9 @@ class MatchService implements MatchServiceInterface
             Team::truncate();
             $this->seedDataForTeams();
             $this->saveAllFixtureMatches();
+            return true;
         }
+        return false;
     }
 
     public function seedDataForTeams()
