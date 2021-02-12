@@ -25,4 +25,6 @@ interface MatchServiceInterface
     public function getAllTeams(): Collection;
 
     public function getAllLeague(): Collection;
+
+    public function generateEstimations($week): bool;
 }

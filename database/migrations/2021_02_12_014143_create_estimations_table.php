@@ -17,7 +17,7 @@ class CreateEstimationsTable extends Migration
             $table->id();
             $table->integer('team_id');
             $table->integer('week');
-            $table->integer('change_to_win')->default(0);
+            $table->integer('chance_to_win')->default(0);
         });
     }
 

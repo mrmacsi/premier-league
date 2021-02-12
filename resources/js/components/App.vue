@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <div v-if="leagues && leagues.length" v-for="(league, index) in leagues">
-                    <League :stats="league.stats" :matches="league.matches" :week="league.week"/>
+                    <League :stats="league.stats" :matches="league.matches" :week="league.week" :estimations="league.estimations"/>
                 </div>
                 <a v-if="!disableButtons" class="btn m-2 btn-primary" role="button" v-on:click="playAll">Play All</a>
                 <a v-if="!disableButtons" class="btn m-2 btn-primary pull-right float-right" role="button"
@@ -29,6 +29,7 @@ export default {
             week: 1,
             totalWeeks: 0,
             disableButtons: null,
+            estimations: null,
             allTeams: null
         }
     },
@@ -51,6 +52,8 @@ export default {
                     self.week++;
                     self.totalWeeks = response.data.totalWeeks;
                     self.allTeams = response.data.allTeams;
+                    self.estimations = response.data.estimations;
+                    console.log(self.estimations)
                     if (self.totalWeeks < self.week) {
                         self.disableButtons = true;
                     }

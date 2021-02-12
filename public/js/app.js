@@ -1876,6 +1876,7 @@ __webpack_require__.r(__webpack_exports__);
       week: 1,
       totalWeeks: 0,
       disableButtons: null,
+      estimations: null,
       allTeams: null
     };
   },
@@ -1897,6 +1898,8 @@ __webpack_require__.r(__webpack_exports__);
         self.week++;
         self.totalWeeks = response.data.totalWeeks;
         self.allTeams = response.data.allTeams;
+        self.estimations = response.data.estimations;
+        console.log(self.estimations);
 
         if (self.totalWeeks < self.week) {
           self.disableButtons = true;
@@ -1987,9 +1990,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['matches', 'week', 'stats'],
+  props: ['matches', 'week', 'estimations', 'stats'],
   // Fetches posts when the component is created.
   created: function created() {}
 });
@@ -37598,7 +37612,8 @@ var render = function() {
                       attrs: {
                         stats: league.stats,
                         matches: league.matches,
-                        week: league.week
+                        week: league.week,
+                        estimations: league.estimations
                       }
                     })
                   ],
@@ -37725,6 +37740,35 @@ var render = function() {
                         _c("td", [_vm._v(_vm._s(match.competitor_team_score))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(match.competitor_team_name))])
+                      ])
+                    : _vm._e()
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", { staticStyle: { "vertical-align": "baseline" } }, [
+            _c(
+              "table",
+              { staticStyle: { width: "200px" } },
+              [
+                _c("tr", { staticStyle: { width: "200px" } }, [
+                  _c("td", { attrs: { colspan: "2" } }, [
+                    _c("h5", [
+                      _vm._v(
+                        _vm._s(_vm.week) + ". Week Predictions of Championship"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.estimations, function(estimation, index) {
+                  return _vm.estimations && _vm.estimations.length
+                    ? _c("tr", [
+                        _c("td", [_vm._v(_vm._s(estimation.team_name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(estimation.chance_to_win))])
                       ])
                     : _vm._e()
                 })

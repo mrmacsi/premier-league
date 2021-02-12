@@ -15,7 +15,7 @@ class Estimations extends Model
     protected $fillable = [
         'team_id',
         'week',
-        'change_to_win'
+        'chance_to_win'
     ];
 
     /**

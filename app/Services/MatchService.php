@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Services\Interfaces\MatchServiceInterface;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class MatchService implements MatchServiceInterface
 {
@@ -111,43 +112,49 @@ class MatchService implements MatchServiceInterface
         if ( !$week) {
             return false;
         }
-        $matches = Match::where(['week' => $week])
-            ->get();
-        foreach ($matches as $match) {
-            $randHome = (float) rand() / (float) getrandmax();
-            $randCompetitor = (float) rand() / (float) getrandmax();
-            $competitorStrength = $match->competitorTeam()
-                                      ->get()
-                                      ->pluck('strength')[0];
-            $competitorScore = (int) round($competitorStrength * $randCompetitor);
-            $homeStrength = $match->homeTeam()
-                                ->get()
-                                ->pluck('strength')[0];
-            $homeScore = (int) round($homeStrength * $randHome);
-            $homeScore = $homeScore > 3 ? 3 : $homeScore;
-            $competitorScore = $competitorScore > 3 ? 3 : $competitorScore;
-            $match->competitor_team_score = $competitorScore;
-            $match->home_team_score = $homeScore;
-            $match->save();
+        try {
+            DB::beginTransaction();
+            $matches = Match::where(['week' => $week])
+                ->get();
+            foreach ($matches as $match) {
+                $randHome = (float) rand() / (float) getrandmax();
+                $randCompetitor = (float) rand() / (float) getrandmax();
+                $competitorStrength = $match->competitorTeam()
+                                          ->get()
+                                          ->pluck('strength')[0];
+                $competitorScore = (int) round($competitorStrength * $randCompetitor);
+                $homeStrength = $match->homeTeam()
+                                    ->get()
+                                    ->pluck('strength')[0];
+                $homeScore = (int) round($homeStrength * $randHome);
+                $homeScore = $homeScore > 3 ? 3 : $homeScore;
+                $competitorScore = $competitorScore > 3 ? 3 : $competitorScore;
+                $match->competitor_team_score = $competitorScore;
+                $match->home_team_score = $homeScore;
+                $match->save();
+            }
+            $this->generateEstimations($week);
+            //all good
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
         }
-        $this->generateEstimations();
         return true;
     }
 
-    public function generateEstimations()
+    public function generateEstimations($week): bool
     {
         $allLeague = $this->getAllLeague();
-        $allConverted = $allLeague->toArray();
         $totalPoints = $allLeague->sum('points');
         foreach ($allLeague as $team) {
-            $estimationPercent = 100 * $team->points / $totalPoints;
+            $estimationPercent = round(100 * $team->points / $totalPoints);
             Estimations::updateOrCreate([
                 'team_id'       => $team->team_id,
-                'week'          => $team->played,
-                'change_to_win' => $estimationPercent
+                'week'          => $week,
+                'chance_to_win' => $estimationPercent
             ]);
         }
-        dd($totalPoints);
+        return true;
     }
 
     public function getAllLeague(): Collection
@@ -158,6 +165,7 @@ class MatchService implements MatchServiceInterface
     public function getWeeklyChanceToWin($week): Collection
     {
         return Estimations::where(['week' => $week])
+            ->orderBy('chance_to_win', 'desc')
             ->get();
     }
 

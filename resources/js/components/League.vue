@@ -47,6 +47,17 @@
                             </tr>
                         </table>
                     </td>
+                    <td style="vertical-align: baseline;">
+                        <table style="width: 200px">
+                            <tr style="width: 200px">
+                                <td colspan="2"><h5>{{ week }}. Week Predictions of Championship</h5></td>
+                            </tr>
+                            <tr v-if="estimations && estimations.length" v-for="(estimation, index) in estimations">
+                                <td>{{ estimation.team_name }}</td>
+                                <td>{{ estimation.chance_to_win }}</td>
+                            </tr>
+                        </table>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -60,6 +71,7 @@ export default {
     props: [
         'matches',
         'week',
+        'estimations',
         'stats'
     ],
     // Fetches posts when the component is created.
