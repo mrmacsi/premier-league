@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Team;
 use App\Services\Interfaces\MatchServiceInterface;
 use Illuminate\Database\Seeder;
 
@@ -15,14 +14,7 @@ class TeamSeeder extends Seeder
      */
     public function run(MatchServiceInterface $matchService)
     {
-        $data = [
-            ['team_name'=>'Chelsea','strength' => 3],
-            ['team_name'=>'Liverpool','strength' => 1],
-            ['team_name'=>'Manchester','strength' => 1],
-            ['team_name'=>'Arsenal','strength' => 2],
-        ];
-
-        Team::insert($data);
+        $matchService->seedDataForTeams();
         $matchService->saveAllFixtureMatches();
     }
 }

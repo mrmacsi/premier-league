@@ -174,4 +174,25 @@ class MatchService implements MatchServiceInterface
         $result['totalWeeks'] = $totalWeeks;
         return $result;
     }
+
+    public function clean($week) {
+        if ($week == 1) {
+            League::truncate();
+            Match::truncate();
+            Team::truncate();
+            $this->seedDataForTeams();
+            $this->saveAllFixtureMatches();
+        }
+    }
+
+    public function seedDataForTeams() {
+        $data = [
+            ['team_name'=>'Chelsea','strength' => 3],
+            ['team_name'=>'Liverpool','strength' => 1],
+            ['team_name'=>'Manchester','strength' => 1],
+            ['team_name'=>'Arsenal','strength' => 2],
+        ];
+
+        Team::insert($data);
+    }
 }
