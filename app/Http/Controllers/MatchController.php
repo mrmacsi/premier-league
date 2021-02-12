@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 
 class MatchController extends Controller
 {
-    public function index(Request $request,MatchServiceInterface $matchService)
+    public function index(Request $request, $week, MatchServiceInterface $matchService)
     {
-        $week = 5;
         $matchService->matchTheTeamsByWeek($week);
         return $matchService->getLeagueTable($week);
     }

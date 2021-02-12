@@ -20,7 +20,7 @@ Route::get('/', function () {
 $router->group([
     'prefix' => 'match',
 ], function () use ($router) {
-    $router->get('/week', [
+    $router->get('/week/{week}', [
         'as' => 'match.index',
         'uses' => 'App\Http\Controllers\MatchController@index',
     ]);

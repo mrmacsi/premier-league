@@ -29,6 +29,15 @@ class MatchService implements MatchServiceInterface
     }
 
     /**
+     * @return int
+     */
+    function getTotalWeeks(): int
+    {
+        $total = $this->getTotalTeamCount();
+        return ($total*($total-1))/2;
+    }
+
+    /**
      * @return Collection
      */
     function getWeeklyFixture(): \Illuminate\Support\Collection
@@ -125,6 +134,7 @@ class MatchService implements MatchServiceInterface
 
     function getLeagueTable($week): array
     {
+        $totalWeeks = $this->getTotalWeeks();
         $matches = Match::where(['week' => $week])
             ->get();
         $mappedMatches = $matches->map(function ($match) {
@@ -161,6 +171,7 @@ class MatchService implements MatchServiceInterface
         $result['stats'] = $mappedLeague;
         $result['matches'] = $mappedMatches;
         $result['week'] = $week;
+        $result['totalWeeks'] = $totalWeeks;
         return $result;
     }
 }

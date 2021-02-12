@@ -62,13 +62,6 @@ export default {
         'week',
         'stats'
     ],
-    data() {
-        return {
-            stats: [],
-            matches: [],
-            week: null,
-        }
-    },
     // Fetches posts when the component is created.
     created() {
     }

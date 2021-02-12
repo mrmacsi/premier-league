@@ -1861,26 +1861,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      leagues: []
+      leagues: [],
+      week: 1,
+      totalWeeks: 0,
+      disableButtons: null
     };
   },
   // Fetches posts when the component is created.
   created: function created() {
-    this.getNewWeek();
+    this.load();
   },
   methods: {
     getNewWeek: function getNewWeek() {
+      if (this.totalWeeks >= this.week) {
+        this.load();
+      }
+    },
+    load: function load() {
+      var _this = this;
+
       var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get('match/week').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('match/week/' + this.week).then(function (response) {
         // JSON responses are automatically parsed.
         self.leagues.push(response.data);
+        _this.week++;
+        _this.totalWeeks = response.data.totalWeeks;
+
+        if (self.totalWeeks < self.week) {
+          self.disableButtons = true;
+        }
       })["catch"](function (e) {
         console.log(e);
       });
+    },
+    playAll: function playAll() {
+      var self = this;
+      setTimeout(function () {
+        if (self.totalWeeks >= self.week) {
+          self.getNewWeek();
+          self.playAll();
+        }
+      }, 1000);
     }
   }
 });
@@ -1958,13 +1985,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['matches', 'week', 'stats'],
-  data: function data() {
-    return {
-      stats: [],
-      matches: [],
-      week: null
-    };
-  },
   // Fetches posts when the component is created.
   created: function created() {}
 });
@@ -37563,21 +37583,29 @@ var render = function() {
               : _vm._e()
           }),
           _vm._v(" "),
-          _c(
-            "a",
-            { staticClass: "btn m-2 btn-primary", attrs: { role: "button" } },
-            [_vm._v("Play All")]
-          ),
+          !_vm.disableButtons
+            ? _c(
+                "a",
+                {
+                  staticClass: "btn m-2 btn-primary",
+                  attrs: { role: "button" },
+                  on: { click: _vm.playAll }
+                },
+                [_vm._v("Play All")]
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "btn m-2 btn-primary pull-right float-right",
-              attrs: { role: "button" },
-              on: { click: _vm.getNewWeek }
-            },
-            [_vm._v("Next Week")]
-          )
+          !_vm.disableButtons
+            ? _c(
+                "a",
+                {
+                  staticClass: "btn m-2 btn-primary pull-right float-right",
+                  attrs: { role: "button" },
+                  on: { click: _vm.getNewWeek }
+                },
+                [_vm._v("Next\n                Week")]
+              )
+            : _vm._e()
         ],
         2
       )

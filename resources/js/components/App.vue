@@ -3,10 +3,12 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div v-if="leagues && leagues.length" v-for="(league, index) in leagues">
-                    <League :stats="league.stats" :matches="league.matches" :week="league.week" />
+                    <League :stats="league.stats" :matches="league.matches" :week="league.week"/>
                 </div>
-                <a class="btn m-2 btn-primary" role="button">Play All</a>
-                <a class="btn m-2 btn-primary pull-right float-right" role="button" v-on:click="getNewWeek">Next Week</a>
+                <a v-if="!disableButtons" class="btn m-2 btn-primary" role="button" v-on:click="playAll">Play All</a>
+                <a v-if="!disableButtons" class="btn m-2 btn-primary pull-right float-right" role="button"
+                   v-on:click="getNewWeek">Next
+                    Week</a>
             </div>
         </div>
     </div>
@@ -18,25 +20,47 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            leagues: []
+            leagues: [],
+            week: 1,
+            totalWeeks: 0,
+            disableButtons: null
         }
     },
     // Fetches posts when the component is created.
     created() {
-        this.getNewWeek();
+        this.load();
     },
     methods: {
-        getNewWeek(){
+        getNewWeek() {
+            if (this.totalWeeks >= this.week) {
+                this.load()
+            }
+        },
+        load() {
             var self = this;
-            axios.get('match/week')
+            axios.get('match/week/' + this.week)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     self.leagues.push(response.data);
+                    this.week++;
+                    this.totalWeeks = response.data.totalWeeks;
+                    if (self.totalWeeks < self.week) {
+                        self.disableButtons = true;
+                    }
                 })
                 .catch(e => {
                     console.log(e)
                 })
-        }
+        },
+        playAll() {
+            var self = this;
+            setTimeout(function(){
+                if (self.totalWeeks >= self.week) {
+                    self.getNewWeek();
+                    self.playAll();
+                }
+            }, 1000);
+        },
     }
 }
 </script>
