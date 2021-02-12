@@ -51,7 +51,7 @@ class MatchSaved
             $competitorWeekChart->win += $competitorWin;
             $competitorWeekChart->draw += $competitorDraw;
             $competitorWeekChart->lose += $competitorLose;
-            $competitorWeekChart->goal_difference += $competitorScore - $homeScore;
+            $competitorWeekChart->goal_difference += $competitorScore;
             $competitorWeekChart->save();
             $homeWeekChart = League::updateOrCreate(['team_id' => $match->home_team_id]);
             $homeWeekChart->points += $homePoint;
@@ -59,7 +59,7 @@ class MatchSaved
             $homeWeekChart->win += $homeWin;
             $homeWeekChart->draw += $homeDraw;
             $homeWeekChart->lose += $homeLose;
-            $homeWeekChart->goal_difference += $homeScore - $competitorScore;
+            $homeWeekChart->goal_difference += $homeScore;
             $homeWeekChart->save();
         }
     }

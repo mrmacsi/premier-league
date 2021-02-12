@@ -24,4 +24,8 @@ $router->group([
         'as' => 'match.index',
         'uses' => 'App\Http\Controllers\MatchController@index',
     ]);
+    $router->get('/test', [
+        'as' => 'match.test',
+        'uses' => 'App\Http\Controllers\MatchController@test',
+    ]);
 });

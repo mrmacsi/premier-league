@@ -23,4 +23,6 @@ interface MatchServiceInterface
     public function getTotalTeamCount(): int;
 
     public function getAllTeams(): Collection;
+
+    public function getAllLeague(): Collection;
 }

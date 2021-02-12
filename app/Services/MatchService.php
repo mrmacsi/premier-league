@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Estimations;
 use App\Models\League;
 use App\Models\Match;
 use App\Models\Team;
@@ -129,12 +130,51 @@ class MatchService implements MatchServiceInterface
             $match->home_team_score = $homeScore;
             $match->save();
         }
+        $this->generateEstimations();
         return true;
+    }
+
+    public function generateEstimations()
+    {
+        $allLeague = $this->getAllLeague();
+        $allConverted = $allLeague->toArray();
+        $totalPoints = $allLeague->sum('points');
+        foreach ($allLeague as $team) {
+            $estimationPercent = 100 * $team->points / $totalPoints;
+            Estimations::updateOrCreate([
+                'team_id'       => $team->team_id,
+                'week'          => $team->played,
+                'change_to_win' => $estimationPercent
+            ]);
+        }
+        dd($totalPoints);
+    }
+
+    public function getAllLeague(): Collection
+    {
+        return League::all();
+    }
+
+    public function getWeeklyChanceToWin($week): Collection
+    {
+        return Estimations::where(['week' => $week])
+            ->get();
     }
 
     public function getLeagueTable($week): array
     {
-        $allTeams = $this->getAllTeams()->toArray();
+        $estimations = $this->getWeeklyChanceToWin($week);
+        $estimationsMapped = $estimations->map(function ($estimation) {
+            $team = $estimation->team()
+                ->get()
+                ->first();
+            return [
+                'team_name'     => $team->team_name,
+                'chance_to_win' => $estimation->chance_to_win
+            ];
+        });
+        $allTeams = $this->getAllTeams()
+            ->toArray();
         $totalWeeks = $this->getTotalWeeks();
         $matches = Match::where(['week' => $week])
             ->get();
@@ -174,6 +214,7 @@ class MatchService implements MatchServiceInterface
         $result['week'] = $week;
         $result['totalWeeks'] = $totalWeeks;
         $result['allTeams'] = $allTeams;
+        $result['estimations'] = $estimationsMapped;
         return $result;
     }
 
@@ -183,6 +224,7 @@ class MatchService implements MatchServiceInterface
             League::truncate();
             Match::truncate();
             Team::truncate();
+            Estimations::truncate();
             $this->seedDataForTeams();
             $this->saveAllFixtureMatches();
             return true;
@@ -193,10 +235,10 @@ class MatchService implements MatchServiceInterface
     public function seedDataForTeams()
     {
         $data = [
-            ['team_name' => 'Chelsea', 'strength' => 2.4],
-            ['team_name' => 'Liverpool', 'strength' => 1.1],
-            ['team_name' => 'Manchester', 'strength' => 1.4],
-            ['team_name' => 'Arsenal', 'strength' => 2],
+            ['team_name' => 'Chelsea', 'strength' => 2.9],
+            ['team_name' => 'Liverpool', 'strength' => 1.9],
+            ['team_name' => 'Manchester', 'strength' => 1.6],
+            ['team_name' => 'Arsenal', 'strength' => 2.1],
         ];
         Team::insert($data);
     }

@@ -16,6 +16,7 @@ class CreateEstimationsTable extends Migration
         Schema::create('estimations', function (Blueprint $table) {
             $table->id();
             $table->integer('team_id');
+            $table->integer('week');
             $table->integer('change_to_win')->default(0);
         });
     }
