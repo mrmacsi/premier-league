@@ -134,6 +134,7 @@ class MatchService implements MatchServiceInterface
 
     public function getLeagueTable($week): array
     {
+        $allTeams = $this->getAllTeams()->toArray();
         $totalWeeks = $this->getTotalWeeks();
         $matches = Match::where(['week' => $week])
             ->get();
@@ -172,6 +173,7 @@ class MatchService implements MatchServiceInterface
         $result['matches'] = $mappedMatches;
         $result['week'] = $week;
         $result['totalWeeks'] = $totalWeeks;
+        $result['allTeams'] = $allTeams;
         return $result;
     }
 
@@ -191,9 +193,9 @@ class MatchService implements MatchServiceInterface
     public function seedDataForTeams()
     {
         $data = [
-            ['team_name' => 'Chelsea', 'strength' => 3],
-            ['team_name' => 'Liverpool', 'strength' => 1],
-            ['team_name' => 'Manchester', 'strength' => 1],
+            ['team_name' => 'Chelsea', 'strength' => 2.4],
+            ['team_name' => 'Liverpool', 'strength' => 1.1],
+            ['team_name' => 'Manchester', 'strength' => 1.4],
             ['team_name' => 'Arsenal', 'strength' => 2],
         ];
         Team::insert($data);

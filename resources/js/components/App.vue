@@ -2,6 +2,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
+                <div class="row p-3">
+                    <div class="col-sm" v-if="allTeams && allTeams.length" v-for="(team, index) in allTeams">
+                        {{ team.team_name }} strength : {{ team.strength }}
+                    </div>
+                </div>
                 <div v-if="leagues && leagues.length" v-for="(league, index) in leagues">
                     <League :stats="league.stats" :matches="league.matches" :week="league.week"/>
                 </div>
@@ -23,7 +28,8 @@ export default {
             leagues: [],
             week: 1,
             totalWeeks: 0,
-            disableButtons: null
+            disableButtons: null,
+            allTeams: null
         }
     },
     // Fetches posts when the component is created.
@@ -44,6 +50,7 @@ export default {
                     self.leagues.push(response.data);
                     self.week++;
                     self.totalWeeks = response.data.totalWeeks;
+                    self.allTeams = response.data.allTeams;
                     if (self.totalWeeks < self.week) {
                         self.disableButtons = true;
                     }

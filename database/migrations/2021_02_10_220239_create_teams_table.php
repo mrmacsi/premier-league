@@ -16,7 +16,7 @@ class CreateTeamsTable extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->text('team_name');
-            $table->integer('strength')->default(0);
+            $table->float('strength')->default(0);
         });
     }
 

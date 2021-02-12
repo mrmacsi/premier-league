@@ -1863,6 +1863,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -1870,7 +1875,8 @@ __webpack_require__.r(__webpack_exports__);
       leagues: [],
       week: 1,
       totalWeeks: 0,
-      disableButtons: null
+      disableButtons: null,
+      allTeams: null
     };
   },
   // Fetches posts when the component is created.
@@ -1890,6 +1896,7 @@ __webpack_require__.r(__webpack_exports__);
         self.leagues.push(response.data);
         self.week++;
         self.totalWeeks = response.data.totalWeeks;
+        self.allTeams = response.data.allTeams;
 
         if (self.totalWeeks < self.week) {
           self.disableButtons = true;
@@ -37563,6 +37570,25 @@ var render = function() {
         "div",
         { staticClass: "col-md-12" },
         [
+          _c(
+            "div",
+            { staticClass: "row p-3" },
+            _vm._l(_vm.allTeams, function(team, index) {
+              return _vm.allTeams && _vm.allTeams.length
+                ? _c("div", { staticClass: "col-sm" }, [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(team.team_name) +
+                        " strength : " +
+                        _vm._s(team.strength) +
+                        "\n                "
+                    )
+                  ])
+                : _vm._e()
+            }),
+            0
+          ),
+          _vm._v(" "),
           _vm._l(_vm.leagues, function(league, index) {
             return _vm.leagues && _vm.leagues.length
               ? _c(
