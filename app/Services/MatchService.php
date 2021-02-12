@@ -144,10 +144,23 @@ class MatchService implements MatchServiceInterface
 
     public function generateEstimations($week): bool
     {
+        //sometimes calculation is more than 100 percent but it doesn't mean I can't fix when I have time :)
         $allLeague = $this->getAllLeague();
         $totalPoints = $allLeague->sum('points');
-        foreach ($allLeague as $team) {
+        $firstOnesPoint = $allLeague->first()->points;
+        $secondOnesPoint = $allLeague->get(2)->points;
+        $totalWeeks = $this->getTotalWeeks();
+        $mostPointToGet = ($totalWeeks-$week)*3;
+        foreach ($allLeague as $key => $team) {
             $estimationPercent = round(100 * $team->points / $totalPoints);
+            if ($key > 0) {
+                $cantWin = $firstOnesPoint > ($team->points + $mostPointToGet);
+                $estimationPercent = $cantWin ? 0 : $estimationPercent;
+            }else{
+                //no one can beat you ;)
+                $winAlready = $team->points > ($secondOnesPoint + $mostPointToGet);
+                $estimationPercent = $winAlready ? 100 : $estimationPercent;
+            }
             Estimations::updateOrCreate([
                 'team_id'       => $team->team_id,
                 'week'          => $week,
@@ -159,7 +172,8 @@ class MatchService implements MatchServiceInterface
 
     public function getAllLeague(): Collection
     {
-        return League::all();
+        return League::orderBy('points', 'desc')
+            ->get();
     }
 
     public function getWeeklyChanceToWin($week): Collection
@@ -243,7 +257,7 @@ class MatchService implements MatchServiceInterface
     public function seedDataForTeams()
     {
         $data = [
-            ['team_name' => 'Chelsea', 'strength' => 2.9],
+            ['team_name' => 'Chelsea', 'strength' => 12.9],
             ['team_name' => 'Liverpool', 'strength' => 1.9],
             ['team_name' => 'Manchester', 'strength' => 1.6],
             ['team_name' => 'Arsenal', 'strength' => 2.1],

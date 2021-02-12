@@ -15,8 +15,6 @@ class MatchController extends Controller
     }
     public function test(Request $request, MatchServiceInterface $matchService)
     {
-        $matchService->clean(1);
-        $matchService->matchTheTeamsByWeek(1);
-        return $matchService->getLeagueTable(1);
+        $matchService->generateEstimations(5);
     }
 }
