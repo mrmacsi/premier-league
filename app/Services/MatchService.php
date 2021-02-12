@@ -7,14 +7,14 @@ use App\Models\Match;
 use App\Models\Team;
 use App\Services\Interfaces\MatchServiceInterface;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class MatchService implements MatchServiceInterface
 {
     /**
      * @return Collection
      */
-    function getAllTeams(): Collection
+    public function getAllTeams(): Collection
     {
         return Team::all();
     }
@@ -22,7 +22,7 @@ class MatchService implements MatchServiceInterface
     /**
      * @return int
      */
-    function getTotalTeamCount(): int
+    public function getTotalTeamCount(): int
     {
         return Team::all()
             ->count();
@@ -31,16 +31,16 @@ class MatchService implements MatchServiceInterface
     /**
      * @return int
      */
-    function getTotalWeeks(): int
+    public function getTotalWeeks(): int
     {
         $total = $this->getTotalTeamCount();
-        return ($total*($total-1))/2;
+        return ($total * ($total - 1)) / 2;
     }
 
     /**
      * @return Collection
      */
-    function getWeeklyFixture(): \Illuminate\Support\Collection
+    public function getWeeklyFixture(): Collection
     {
         $weeklyMatches = collect();
         $teams = $this->getAllTeams();
@@ -82,7 +82,7 @@ class MatchService implements MatchServiceInterface
     /**
      * @return bool
      */
-    function saveAllFixtureMatches(): bool
+    public function saveAllFixtureMatches(): bool
     {
         try {
             $allWeekFixture = $this->getWeeklyFixture();
@@ -105,7 +105,7 @@ class MatchService implements MatchServiceInterface
      * @param  int  $week
      * @return bool
      */
-    function matchTheTeamsByWeek(int $week): bool
+    public function matchTheTeamsByWeek(int $week): bool
     {
         if ( !$week) {
             return false;
@@ -132,7 +132,7 @@ class MatchService implements MatchServiceInterface
         return true;
     }
 
-    function getLeagueTable($week): array
+    public function getLeagueTable($week): array
     {
         $totalWeeks = $this->getTotalWeeks();
         $matches = Match::where(['week' => $week])
@@ -175,7 +175,8 @@ class MatchService implements MatchServiceInterface
         return $result;
     }
 
-    public function clean($week) {
+    public function clean($week)
+    {
         if ($week == 1) {
             League::truncate();
             Match::truncate();
@@ -185,14 +186,14 @@ class MatchService implements MatchServiceInterface
         }
     }
 
-    public function seedDataForTeams() {
+    public function seedDataForTeams()
+    {
         $data = [
-            ['team_name'=>'Chelsea','strength' => 3],
-            ['team_name'=>'Liverpool','strength' => 1],
-            ['team_name'=>'Manchester','strength' => 1],
-            ['team_name'=>'Arsenal','strength' => 2],
+            ['team_name' => 'Chelsea', 'strength' => 3],
+            ['team_name' => 'Liverpool', 'strength' => 1],
+            ['team_name' => 'Manchester', 'strength' => 1],
+            ['team_name' => 'Arsenal', 'strength' => 2],
         ];
-
         Team::insert($data);
     }
 }

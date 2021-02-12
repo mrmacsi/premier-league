@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class MatchServiceTest extends TestCase
+class MatchControllerTest extends TestCase
 {
     /**
      * A basic test example.
