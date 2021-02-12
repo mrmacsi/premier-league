@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\League;
 use App\Models\Match;
 use App\Models\Team;
 use App\Services\Interfaces\MatchServiceInterface;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class MatchService implements MatchServiceInterface
@@ -80,12 +82,12 @@ class MatchService implements MatchServiceInterface
                     $match = new Match();
                     $match->home_team_id = collect($matches)->first()->id;
                     $match->competitor_team_id = collect($matches)->last()->id;
-                    $match->week = $key+1;
+                    $match->week = $key + 1;
                     $match->save();
                 }
             }
             return true;
-        } catch (\Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -96,22 +98,69 @@ class MatchService implements MatchServiceInterface
      */
     function matchTheTeamsByWeek(int $week): bool
     {
-        if (!$week) {
+        if ( !$week) {
             return false;
         }
-        $matches = Match::where(['week' => $week])->get();
+        $matches = Match::where(['week' => $week])
+            ->get();
         foreach ($matches as $match) {
-            $rand = (float)rand() / (float)getrandmax();
-            $competitorStrength = $match->competitorTeam()->get()->pluck('strength')[0];
-            $competitorScore = (int)round($competitorStrength * $rand);
-            $homeStrength = $match->homeTeam()->get()->pluck('strength')[0];
-            $homeScore = (int)round($homeStrength * $rand);
-            $homeScore = $homeScore>3?3:$homeScore;
-            $competitorScore = $competitorScore>3?3:$competitorScore;
+            $randHome = (float) rand() / (float) getrandmax();
+            $randCompetitor = (float) rand() / (float) getrandmax();
+            $competitorStrength = $match->competitorTeam()
+                                      ->get()
+                                      ->pluck('strength')[0];
+            $competitorScore = (int) round($competitorStrength * $randCompetitor);
+            $homeStrength = $match->homeTeam()
+                                ->get()
+                                ->pluck('strength')[0];
+            $homeScore = (int) round($homeStrength * $randHome);
+            $homeScore = $homeScore > 3 ? 3 : $homeScore;
+            $competitorScore = $competitorScore > 3 ? 3 : $competitorScore;
             $match->competitor_team_score = $competitorScore;
             $match->home_team_score = $homeScore;
             $match->save();
         }
         return true;
+    }
+
+    function getLeagueTable($week): array
+    {
+        $matches = Match::where(['week' => $week])
+            ->get();
+        $mappedMatches = $matches->map(function ($match) {
+            $homeTeam = $match->homeTeam()
+                ->get()
+                ->first();
+            $competitorTeam = $match->competitorTeam()
+                ->get()
+                ->first();
+            return [
+                'home_team_name'        => $homeTeam->team_name,
+                'home_team_score'       => $match->home_team_score,
+                'competitor_team_name'  => $competitorTeam->team_name,
+                'competitor_team_score' => $match->competitor_team_score,
+            ];
+        });
+        $league = League::orderBy('points', 'desc')
+            ->get();
+        $mappedLeague = $league->map(function ($item) {
+            $team = $item->team()
+                ->get()
+                ->first();
+            return [
+                'team_id'         => $team->id,
+                'team_name'       => $team->team_name,
+                'points'          => $item->points,
+                'played'          => $item->played,
+                'win'             => $item->win,
+                'draw'            => $item->draw,
+                'lose'            => $item->lose,
+                'goal_difference' => $item->goal_difference
+            ];
+        });
+        $result['stats'] = $mappedLeague;
+        $result['matches'] = $mappedMatches;
+        $result['week'] = $week;
+        return $result;
     }
 }

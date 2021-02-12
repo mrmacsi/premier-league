@@ -1,12 +1,59 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I am now
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <table style="width: 400px">
+                                        <tr>
+                                            <td colspan="9"><h1>League Table</h1></td>
+                                        </tr>
+                                        <tr class="col">
+                                            <th>#</th>
+                                            <th>Teams</th>
+                                            <th>PTS</th>
+                                            <th>P</th>
+                                            <th>W</th>
+                                            <th>D</th>
+                                            <th>L</th>
+                                            <th>GD</th>
+                                        </tr>
+                                        <tr class="wpos" v-if="stats && stats.length" v-for="(stat, index) in stats">
+                                            <td> {{ index + 1 }}</td>
+                                            <td>{{ stat.team_name }}</td>
+                                            <td>{{ stat.points }}</td>
+                                            <td>{{ stat.played }}</td>
+                                            <td>{{ stat.win }}</td>
+                                            <td>{{ stat.draw }}</td>
+                                            <td>{{ stat.lose }}</td>
+                                            <td>{{ stat.goal_difference }}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align: baseline;">
+                                    <table style="width: 400px">
+                                        <tr style="width: 200px">
+                                            <td colspan="5"><h1>Match Results</h1></td>
+                                        </tr>
+                                        <tr style="width: 200px">
+                                            <td colspan="5"><h3>{{ week }}. Week Match Results</h3></td>
+                                        </tr>
+                                        <tr v-if="matches && matches.length" v-for="(match, index) in matches">
+                                            <td>{{ match.home_team_name }}</td>
+                                            <td>{{ match.home_team_score }}</td>
+                                            <td>-</td>
+                                            <td>{{ match.competitor_team_score }}</td>
+                                            <td>{{ match.competitor_team_name }}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <a class="btn m-2 btn-primary" role="button">Play All</a>
+                        <a class="btn m-2 btn-primary pull-right float-right" role="button">Next Week</a>
                     </div>
                 </div>
             </div>
@@ -15,9 +62,28 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            stats: [],
+            matches: [],
+            week: null,
         }
+    },
+    // Fetches posts when the component is created.
+    created() {
+        axios.get('match/week')
+            .then(response => {
+                // JSON responses are automatically parsed.
+                this.stats = response.data.stats;
+                this.matches = response.data.matches;
+                this.week = response.data.week;
+            })
+            .catch(e => {
+                this.errors.push(e)
+            })
     }
+}
 </script>

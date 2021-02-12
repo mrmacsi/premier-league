@@ -9,6 +9,8 @@ class MatchController extends Controller
 {
     public function index(Request $request,MatchServiceInterface $matchService)
     {
-        $result = $matchService->matchTheTeamsByWeek(2);
+        $week = 5;
+        $matchService->matchTheTeamsByWeek($week);
+        return $matchService->getLeagueTable($week);
     }
 }

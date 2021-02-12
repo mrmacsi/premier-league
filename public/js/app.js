@@ -1845,6 +1845,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -1861,9 +1863,74 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  data: function data() {
+    return {
+      stats: [],
+      matches: [],
+      week: null
+    };
+  },
+  // Fetches posts when the component is created.
+  created: function created() {
+    var _this = this;
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default().get('match/week').then(function (response) {
+      // JSON responses are automatically parsed.
+      _this.stats = response.data.stats;
+      _this.matches = response.data.matches;
+      _this.week = response.data.week;
+    })["catch"](function (e) {
+      _this.errors.push(e);
+    });
   }
 });
 
@@ -37364,26 +37431,149 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", [
+            _c("table", [
+              _c("tr", [
+                _c("td", [
+                  _c(
+                    "table",
+                    { staticStyle: { width: "400px" } },
+                    [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _vm._l(_vm.stats, function(stat, index) {
+                        return _vm.stats && _vm.stats.length
+                          ? _c("tr", { staticClass: "wpos" }, [
+                              _c("td", [_vm._v(" " + _vm._s(index + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.team_name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.points))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.played))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.win))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.draw))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.lose))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(stat.goal_difference))])
+                            ])
+                          : _vm._e()
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", { staticStyle: { "vertical-align": "baseline" } }, [
+                  _c(
+                    "table",
+                    { staticStyle: { width: "400px" } },
+                    [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _c("tr", { staticStyle: { width: "200px" } }, [
+                        _c("td", { attrs: { colspan: "5" } }, [
+                          _c("h3", [
+                            _vm._v(_vm._s(_vm.week) + ". Week Match Results")
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.matches, function(match, index) {
+                        return _vm.matches && _vm.matches.length
+                          ? _c("tr", [
+                              _c("td", [_vm._v(_vm._s(match.home_team_name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(match.home_team_score))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v("-")]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(match.competitor_team_score))
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(match.competitor_team_name))
+                              ])
+                            ])
+                          : _vm._e()
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "a",
+              { staticClass: "btn m-2 btn-primary", attrs: { role: "button" } },
+              [_vm._v("Play All")]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "btn m-2 btn-primary pull-right float-right",
+                attrs: { role: "button" }
+              },
+              [_vm._v("Next Week")]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v("\n                    I am now\n                ")
-            ])
-          ])
-        ])
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "9" } }, [
+        _c("h1", [_vm._v("League Table")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticClass: "col" }, [
+      _c("th", [_vm._v("#")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Teams")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("PTS")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("P")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("W")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("D")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("L")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("GD")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticStyle: { width: "200px" } }, [
+      _c("td", { attrs: { colspan: "5" } }, [
+        _c("h1", [_vm._v("Match Results")])
       ])
     ])
   }
@@ -49537,6 +49727,18 @@ Vue.compile = compileToFunctions;
 /******/ 	// It's empty as some runtime module handles the default behavior
 /******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
