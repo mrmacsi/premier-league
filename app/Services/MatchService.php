@@ -257,7 +257,7 @@ class MatchService implements MatchServiceInterface
     public function seedDataForTeams()
     {
         $data = [
-            ['team_name' => 'Chelsea', 'strength' => 12.9],
+            ['team_name' => 'Chelsea', 'strength' => 2.9],
             ['team_name' => 'Liverpool', 'strength' => 1.9],
             ['team_name' => 'Manchester', 'strength' => 1.6],
             ['team_name' => 'Arsenal', 'strength' => 2.1],
