@@ -1884,14 +1884,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     load: function load() {
-      var _this = this;
-
       var self = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('match/week/' + this.week).then(function (response) {
         // JSON responses are automatically parsed.
         self.leagues.push(response.data);
-        _this.week++;
-        _this.totalWeeks = response.data.totalWeeks;
+        self.week++;
+        self.totalWeeks = response.data.totalWeeks;
 
         if (self.totalWeeks < self.week) {
           self.disableButtons = true;

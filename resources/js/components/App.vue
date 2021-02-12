@@ -42,8 +42,8 @@ export default {
                 .then(response => {
                     // JSON responses are automatically parsed.
                     self.leagues.push(response.data);
-                    this.week++;
-                    this.totalWeeks = response.data.totalWeeks;
+                    self.week++;
+                    self.totalWeeks = response.data.totalWeeks;
                     if (self.totalWeeks < self.week) {
                         self.disableButtons = true;
                     }
