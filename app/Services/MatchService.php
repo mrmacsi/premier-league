@@ -148,7 +148,7 @@ class MatchService implements MatchServiceInterface
         $allLeague = $this->getAllLeague();
         $totalPoints = $allLeague->sum('points');
         $firstOnesPoint = $allLeague->first()->points;
-        $secondOnesPoint = $allLeague->get(2)->points;
+        $secondOnesPoint = $allLeague->get(1)->points;
         $totalWeeks = $this->getTotalWeeks();
         $mostPointToGet = ($totalWeeks-$week)*3;
         foreach ($allLeague as $key => $team) {
